@@ -10,7 +10,6 @@ win_height = 450
 
 
 class Application(Frame):
-
     def __init__(self,master=None,bgcolor="#000000"):
         super().__init__(master)
         self.master = master
@@ -41,16 +40,18 @@ class Application(Frame):
         btn_line.pack(side='left',padx=10)
         btn_lineArrow = Button(root, text="箭头直线", name="lineArrow")
         btn_lineArrow.pack(side='left',padx=10)
+        btn_rect1 = Button(root, text="实心矩形", name="rect1")
+        btn_rect1.pack(side='left',padx=10)
         btn_color = Button(root, text="颜色", name="color")
-        btn_color.pack(side='left',padx=20)
-
-           # 事件处理
+        btn_color.pack(side='right',padx=5)
+        # 事件处理
         btn_rect.bind_class("Button", "<1>", self.eventManager)
         self.drawpad.bind("<ButtonRelease-1>", self.stopDraw)
-         # 增加颜色切换的快捷键
+        # 增加颜色切换的快捷键
         root.bind("<KeyPress-r>", self.kuaijiejian)
         root.bind("<KeyPress-g>", self.kuaijiejian)
         root.bind("<KeyPress-y>", self.kuaijiejian)
+        root.bind("<KeyPress-w>", self.kuaijiejian)
 
 
     def eventManager(self, event):
@@ -62,6 +63,8 @@ class Application(Frame):
             self.drawpad.bind("<B1-Motion>", self.mylineArrow)
         elif name == "rect":
             self.drawpad.bind("<B1-Motion>", self.myRect)
+        elif name == "rect1":
+            self.drawpad.bind("<B1-Motion>", self.myRect1)
         elif name == "pen":
             self.drawpad.bind("<B1-Motion>", self.myPen)
         elif name == "earsor":
@@ -74,8 +77,8 @@ class Application(Frame):
             self.fgcolor = c[1]
 
     def stopDraw(self, event):
-             self.startDrawFlag = False
-             self.lastDraw = 0
+        self.startDrawFlag = False
+        self.lastDraw = 0
 
 
     def startDraw(self,event):
@@ -87,16 +90,20 @@ class Application(Frame):
 
 
     def myline(self, event):
-         self.startDraw(event)
-         self.lastDraw= self.drawpad.create_line(self.x,self.y,event.x,event.y, fill=self.fgcolor)
+        self.startDraw(event)
+        self.lastDraw= self.drawpad.create_line(self.x,self.y,event.x,event.y, fill=self.fgcolor)
 
     def mylineArrow(self, event):
-         self.startDraw(event)
-         self.lastDraw =self.drawpad.create_line(self.x, self.y, event.x, event.y, arrow=LAST, fill=self.fgcolor)
+        self.startDraw(event)
+        self.lastDraw =self.drawpad.create_line(self.x, self.y, event.x, event.y, arrow=LAST, fill=self.fgcolor)
 
     def myRect(self, event):
-         self.startDraw(event)
-         self.lastDraw =self.drawpad.create_rectangle(self.x, self.y, event.x, event.y, outline=self.fgcolor)
+        self.startDraw(event)
+        self.lastDraw =self.drawpad.create_rectangle(self.x, self.y, event.x, event.y, outline=self.fgcolor)
+        
+    def myRect1(self, event):
+        self.startDraw(event)
+        self.lastDraw =self.drawpad.create_rectangle(self.x, self.y, event.x, event.y, fill=self.fgcolor,outline=self.fgcolor)
 
     def myPen(self, event):
         self.startDraw(event)
@@ -105,22 +112,25 @@ class Application(Frame):
         self.y = event.y
 
     def myErasor(self, event):
-
-         self.startDraw(event)
-         self.drawpad.create_rectangle(event.x-4, event.y-4, event.x + 4, event.y + 4, fill=self.bgcolor)
-         self.x = event.x
-         self.y = event.y
+        self.startDraw(event)
+        self.drawpad.create_rectangle(event.x-4, event.y-4, event.x + 4, event.y + 4, fill=self.bgcolor)
+        self.x = event.x
+        self.y = event.y
 
     def kuaijiejian(self, event):
-         if event.char == "r":
-             self.fgcolor = "#ff0000"
-         elif event.char == "g":
+        print(event.char)
+        if event.char == "r":
+            self.fgcolor = "#ff0000"
+        elif event.char == "g":
             self.fgcolor = "#00ff00"
-         elif event.char == "y":
-             self.fgcolor = "#ffff00"
+        elif event.char == "y":
+            self.fgcolor = "#ffff00"
+        elif event.char == "w":
+            self.fgcolor = "#ffffff"
 
 if __name__ == '__main__':
-    root = Tk();root.geometry(str(win_width)+"x"+str(win_height)+"+200+300")
+    root = Tk()
+    root.geometry(str(win_width)+"x"+str(win_height)+"+200+300")
     root.title("Mr_huang的简易画图板")
     app = Application(master=root)
     root.mainloop()
